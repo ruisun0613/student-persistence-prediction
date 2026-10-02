@@ -146,11 +146,11 @@ The administration dashboard provides an overview of the deployed model, includi
 
 ### Prediction Interface
 
-![Prediction Interface](docs/images/Student-At-Risk.png)
+![Prediction Interface](docs/images/Prediction Interface.png)
 
 ### Model Administration Dashboard
 
-![Model Administration Dashboard](docs/images/Student-At-Risk-Admin.png)
+![Model Administration Dashboard](docs/images/Model Administration Dashboard.png)
 
 ## Categorical Feature Codes
 
