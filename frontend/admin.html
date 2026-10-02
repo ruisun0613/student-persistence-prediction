@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>Model Administration Panel</h2>
+
+    <button id="btnInfo">View Model Info</button>
+    <button id="btnRetrain">Retrain Model</button>
+
+    <div id="adminResult" class="result-box">Waiting...</div>
+</div>
+
+<script>
+    const infoBtn = document.getElementById("btnInfo");
+    const retrainBtn = document.getElementById("btnRetrain");
+    const adminResult = document.getElementById("adminResult");
+
+    infoBtn.onclick = async () => {
+        adminResult.textContent = "Loading model info...";
+        try {
+            const res = await fetch("/admin/info");
+            const data = await res.json();
+            adminResult.textContent = JSON.stringify(data, null, 2);
+        } catch (e) {
+            console.error(e);
+            adminResult.textContent = "Error fetching model info.";
+        }
+    };
+
+    retrainBtn.onclick = async () => {
+        adminResult.textContent = "Retraining model, please wait...";
+        try {
+            const res = await fetch("/admin/retrain", {method: "POST"});
+            const data = await res.json();
+            adminResult.textContent = JSON.stringify(data, null, 2);
+        } catch (e) {
+            console.error(e);
+            adminResult.textContent = "Error retraining model.";
+        }
+    };
+</script>
+
+</body>
+</html>

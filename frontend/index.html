@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student At-Risk Predictor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>Student At-Risk Prediction</h2>
+
+    <form id="predictForm">
+        <label>First Term GPA
+            <input type="number" step="0.01" name="FirstTermGpa" required>
+        </label>
+
+        <label>Second Term GPA
+            <input type="number" step="0.01" name="SecondTermGpa" required>
+        </label>
+
+        <label>First Language
+            <input type="number" step="1" name="FirstLanguage" required>
+        </label>
+
+        <label>Funding
+            <input type="number" step="1" name="Funding" required>
+        </label>
+
+        <label>Fast Track
+            <input type="number" step="1" name="FastTrack" required>
+        </label>
+
+        <label>Co-op
+            <input type="number" step="1" name="Coop" required>
+        </label>
+
+        <label>Residency (1=Domestic, 2=International)
+            <input type="number" step="1" name="Residency" required>
+        </label>
+
+        <label>Gender (1/2)
+            <input type="number" step="1" name="Gender" required>
+        </label>
+
+        <label>Previous Education
+            <input type="number" step="1" name="PrevEducation" required>
+        </label>
+
+        <label>Age Group
+            <input type="number" step="1" name="AgeGroup" required>
+        </label>
+
+        <label>High School Average Mark
+            <input type="number" step="0.1" name="HighSchoolAvgMark" required>
+        </label>
+
+        <label>Math Score
+            <input type="number" step="0.1" name="MathScore" required>
+        </label>
+
+        <label>English Grade
+            <input type="number" step="0.1" name="EnglishGrade" required>
+        </label>
+
+        <button type="submit">Predict</button>
+    </form>
+
+    <div id="userResult" class="result-box">
+        Prediction result will appear here.
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
