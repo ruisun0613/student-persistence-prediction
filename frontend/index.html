@@ -2,75 +2,338 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Student At-Risk Predictor</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div class="container">
-    <h2>Student At-Risk Prediction</h2>
+<div class="page-container">
 
-    <form id="predictForm">
-        <label>First Term GPA
-            <input type="number" step="0.01" name="FirstTermGpa" required>
-        </label>
+    <!-- Header -->
+    <header class="header">
+        <div>
+            <h1>Student At-Risk Predictor</h1>
+            <p>
+                Estimate a student's risk of not persisting based on
+                academic and demographic information.
+            </p>
+        </div>
 
-        <label>Second Term GPA
-            <input type="number" step="0.01" name="SecondTermGpa" required>
-        </label>
+        <div class="model-badge">
+            PyTorch Model
+        </div>
+    </header>
 
-        <label>First Language
-            <input type="number" step="1" name="FirstLanguage" required>
-        </label>
 
-        <label>Funding
-            <input type="number" step="1" name="Funding" required>
-        </label>
+    <main class="dashboard">
 
-        <label>Fast Track
-            <input type="number" step="1" name="FastTrack" required>
-        </label>
+        <!-- =========================
+             INPUT SECTION
+        ========================== -->
+        <section class="input-panel">
 
-        <label>Co-op
-            <input type="number" step="1" name="Coop" required>
-        </label>
+            <form id="predictForm">
 
-        <label>Residency (1=Domestic, 2=International)
-            <input type="number" step="1" name="Residency" required>
-        </label>
+                <!-- Academic Information -->
+                <div class="form-section">
 
-        <label>Gender (1/2)
-            <input type="number" step="1" name="Gender" required>
-        </label>
+                    <div class="section-title">
+                        <span class="section-number">1</span>
 
-        <label>Previous Education
-            <input type="number" step="1" name="PrevEducation" required>
-        </label>
+                        <div>
+                            <h2>Academic Information</h2>
+                            <p>Enter the student's academic performance.</p>
+                        </div>
+                    </div>
 
-        <label>Age Group
-            <input type="number" step="1" name="AgeGroup" required>
-        </label>
 
-        <label>High School Average Mark
-            <input type="number" step="0.1" name="HighSchoolAvgMark" required>
-        </label>
+                    <div class="form-grid">
 
-        <label>Math Score
-            <input type="number" step="0.1" name="MathScore" required>
-        </label>
+                        <div class="form-group">
+                            <label for="FirstTermGpa">First Term GPA</label>
 
-        <label>English Grade
-            <input type="number" step="0.1" name="EnglishGrade" required>
-        </label>
+                            <input
+                                id="FirstTermGpa"
+                                type="number"
+                                name="FirstTermGpa"
+                                min="0"
+                                max="4.5"
+                                step="0.01"
+                                placeholder="e.g. 3.20"
+                                required
+                            >
+                        </div>
 
-        <button type="submit">Predict</button>
-    </form>
 
-    <div id="userResult" class="result-box">
-        Prediction result will appear here.
-    </div>
+                        <div class="form-group">
+                            <label for="SecondTermGpa">Second Term GPA</label>
+
+                            <input
+                                id="SecondTermGpa"
+                                type="number"
+                                name="SecondTermGpa"
+                                min="0"
+                                max="4.5"
+                                step="0.01"
+                                placeholder="e.g. 3.00"
+                                required
+                            >
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="HighSchoolAvgMark">
+                                High School Average
+                            </label>
+
+                            <input
+                                id="HighSchoolAvgMark"
+                                type="number"
+                                name="HighSchoolAvgMark"
+                                min="0"
+                                max="100"
+                                step="0.1"
+                                placeholder="e.g. 78"
+                                required
+                            >
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="MathScore">Math Score</label>
+
+                            <input
+                                id="MathScore"
+                                type="number"
+                                name="MathScore"
+                                min="0"
+                                max="100"
+                                step="0.1"
+                                placeholder="e.g. 75"
+                                required
+                            >
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="EnglishGrade">English Grade</label>
+
+                            <input
+                                id="EnglishGrade"
+                                type="number"
+                                name="EnglishGrade"
+                                min="0"
+                                step="0.1"
+                                placeholder="e.g. 8"
+                                required
+                            >
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!-- Student Information -->
+                <div class="form-section">
+
+                    <div class="section-title">
+                        <span class="section-number">2</span>
+
+                        <div>
+                            <h2>Student Information</h2>
+                            <p>Enter the student's background information.</p>
+                        </div>
+                    </div>
+
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="FirstLanguage">First Language</label>
+
+                            <select
+                                id="FirstLanguage"
+                                name="FirstLanguage"
+                                required
+                            >
+                                <option value="">Select</option>
+                                <option value="1">English</option>
+                                <option value="2">Other</option>
+                            </select>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="Funding">Funding Code</label>
+
+                            <input
+                                id="Funding"
+                                type="number"
+                                name="Funding"
+                                step="1"
+                                placeholder="Enter category code"
+                                required
+                            >
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="FastTrack">Fast Track</label>
+
+                            <select
+                                id="FastTrack"
+                                name="FastTrack"
+                                required
+                            >
+                                <option value="">Select</option>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="Coop">Co-op</label>
+
+                            <select
+                                id="Coop"
+                                name="Coop"
+                                required
+                            >
+                                <option value="">Select</option>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="Residency">Residency</label>
+
+                            <select
+                                id="Residency"
+                                name="Residency"
+                                required
+                            >
+                                <option value="">Select</option>
+                                <option value="1">Domestic</option>
+                                <option value="2">International</option>
+                            </select>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="Gender">Gender Code</label>
+
+                            <select id="Gender" name="Gender" required>
+                                <option value="">Select</option>
+                                <option value="1">Code 1</option>
+                                <option value="2">Code 2</option>
+                            </select>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="PrevEducation">Previous Education Code</label>
+
+                            <input
+                                id="PrevEducation"
+                                type="number"
+                                name="PrevEducation"
+                                step="1"
+                                placeholder="Enter category code"
+                                required
+                            >
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="AgeGroup">Age Group Code</label>
+
+                            <input
+                                id="AgeGroup"
+                                type="number"
+                                name="AgeGroup"
+                                step="1"
+                                placeholder="Enter category code"
+                                required
+                            >
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <button class="predict-button" type="submit">
+                    Analyze Student Risk
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- =========================
+             RESULT SECTION
+        ========================== -->
+        <aside class="result-panel">
+
+            <div class="result-header">
+                <span>Prediction Result</span>
+                <span class="status-dot"></span>
+            </div>
+
+
+            <div id="userResult" class="result-content">
+
+                <div class="empty-result">
+
+                    <div class="result-icon">
+                        ?
+                    </div>
+
+                    <h2>No Prediction Yet</h2>
+
+                    <p>
+                        Enter the student's information and run the model
+                        to view the risk assessment.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="model-info">
+
+                <div>
+                    <span>Model</span>
+                    <strong>PersistenceNN</strong>
+                </div>
+
+                <div>
+                    <span>Framework</span>
+                    <strong>PyTorch</strong>
+                </div>
+
+                <div>
+                    <span>Decision Threshold</span>
+                    <strong>0.50</strong>
+                </div>
+
+            </div>
+
+        </aside>
+
+    </main>
+
 </div>
 
 <script src="script.js"></script>
+
 </body>
 </html>

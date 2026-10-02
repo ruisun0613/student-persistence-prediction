@@ -43,3 +43,6 @@ dataset/
 # Other files
 # =======================================
 course_materials/
+
+# Python package metadata
+*.egg-info/

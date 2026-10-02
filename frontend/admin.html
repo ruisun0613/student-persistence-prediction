@@ -2,48 +2,316 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Model Administration | Student At-Risk Predictor</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div class="container">
-    <h2>Model Administration Panel</h2>
+<div class="page-container">
 
-    <button id="btnInfo">View Model Info</button>
-    <button id="btnRetrain">Retrain Model</button>
+    <!-- Header -->
+    <header class="header">
+        <div>
+            <h1>Model Administration</h1>
+            <p>
+                Monitor the deployed Student At-Risk Prediction model
+                and review its evaluation performance.
+            </p>
+        </div>
 
-    <div id="adminResult" class="result-box">Waiting...</div>
+        <a class="back-link" href="index.html">
+            ← Prediction Interface
+        </a>
+    </header>
+
+
+    <!-- Loading / Error -->
+    <div id="adminStatus" class="admin-status">
+        Loading model information...
+    </div>
+
+
+    <!-- Dashboard -->
+    <main id="adminDashboard" class="admin-dashboard hidden">
+
+        <!-- Metric Cards -->
+        <section class="metrics-grid">
+
+            <div class="metric-card">
+                <span class="metric-name">Accuracy</span>
+                <strong id="accuracy">--</strong>
+                <span class="metric-description">
+                    Overall prediction accuracy
+                </span>
+            </div>
+
+            <div class="metric-card">
+                <span class="metric-name">At-Risk Precision</span>
+                <strong id="precision">--</strong>
+                <span class="metric-description">
+                    Accuracy of at-risk predictions
+                </span>
+            </div>
+
+            <div class="metric-card">
+                <span class="metric-name">At-Risk Recall</span>
+                <strong id="recall">--</strong>
+                <span class="metric-description">
+                    At-risk students identified
+                </span>
+            </div>
+
+            <div class="metric-card">
+                <span class="metric-name">At-Risk F1</span>
+                <strong id="f1">--</strong>
+                <span class="metric-description">
+                    Precision-recall balance
+                </span>
+            </div>
+
+        </section>
+
+
+        <section class="admin-content-grid">
+
+            <!-- Confusion Matrix -->
+            <div class="admin-card">
+
+                <div class="admin-card-header">
+                    <div>
+                        <h2>Confusion Matrix</h2>
+                        <p>Performance on the held-out test set.</p>
+                    </div>
+                </div>
+
+
+                <div class="matrix-wrapper">
+
+                    <div class="matrix-axis-title">
+                        Predicted Class
+                    </div>
+
+                    <table class="confusion-matrix">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Not At Risk</th>
+                                <th>At Risk</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <th>Actual Not At Risk</th>
+
+                                <td class="matrix-good">
+                                    <strong id="trueNegative">--</strong>
+                                    <span>True Negative</span>
+                                </td>
+
+                                <td class="matrix-warning">
+                                    <strong id="falsePositive">--</strong>
+                                    <span>False Positive</span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th>Actual At Risk</th>
+
+                                <td class="matrix-danger">
+                                    <strong id="falseNegative">--</strong>
+                                    <span>False Negative</span>
+                                </td>
+
+                                <td class="matrix-good">
+                                    <strong id="truePositive">--</strong>
+                                    <span>True Positive</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+
+            <!-- Model Details -->
+            <div class="admin-card">
+
+                <div class="admin-card-header">
+                    <div>
+                        <h2>Model Information</h2>
+                        <p>Current inference configuration.</p>
+                    </div>
+
+                    <span class="online-badge">
+                        Active
+                    </span>
+                </div>
+
+
+                <div class="details-list">
+
+                    <div class="detail-row">
+                        <span>Model</span>
+                        <strong id="modelName">--</strong>
+                    </div>
+
+                    <div class="detail-row">
+                        <span>Target</span>
+                        <strong id="targetName">--</strong>
+                    </div>
+
+                    <div class="detail-row">
+                        <span>Decision Threshold</span>
+                        <strong id="threshold">--</strong>
+                    </div>
+
+                    <div class="detail-row">
+                        <span>Positive Class Weight</span>
+                        <strong id="posWeight">--</strong>
+                    </div>
+
+                    <div class="detail-row">
+                        <span>Framework</span>
+                        <strong>PyTorch</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="model-note">
+                    <strong>Class imbalance handling</strong>
+
+                    <p>
+                        The model uses weighted binary cross-entropy
+                        to place greater importance on identifying
+                        students in the at-risk class.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
 </div>
 
+
 <script>
-    const infoBtn = document.getElementById("btnInfo");
-    const retrainBtn = document.getElementById("btnRetrain");
-    const adminResult = document.getElementById("adminResult");
+    const API_URL = "http://127.0.0.1:8000/model-info";
 
-    infoBtn.onclick = async () => {
-        adminResult.textContent = "Loading model info...";
-        try {
-            const res = await fetch("/admin/info");
-            const data = await res.json();
-            adminResult.textContent = JSON.stringify(data, null, 2);
-        } catch (e) {
-            console.error(e);
-            adminResult.textContent = "Error fetching model info.";
-        }
-    };
+    const statusBox = document.getElementById("adminStatus");
+    const dashboard = document.getElementById("adminDashboard");
 
-    retrainBtn.onclick = async () => {
-        adminResult.textContent = "Retraining model, please wait...";
+
+    function toPercent(value) {
+        return `${(value * 100).toFixed(2)}%`;
+    }
+
+
+    async function loadModelInfo() {
+
         try {
-            const res = await fetch("/admin/retrain", {method: "POST"});
-            const data = await res.json();
-            adminResult.textContent = JSON.stringify(data, null, 2);
-        } catch (e) {
-            console.error(e);
-            adminResult.textContent = "Error retraining model.";
+
+            const response = await fetch(API_URL);
+
+            if (!response.ok) {
+                throw new Error(
+                    `Server returned ${response.status}`
+                );
+            }
+
+            const data = await response.json();
+            const metrics = data.metrics;
+
+
+            // =========================
+            // Performance Metrics
+            // =========================
+
+            document.getElementById("accuracy").textContent =
+                toPercent(metrics.accuracy);
+
+            document.getElementById("precision").textContent =
+                toPercent(metrics.at_risk_precision);
+
+            document.getElementById("recall").textContent =
+                toPercent(metrics.at_risk_recall);
+
+            document.getElementById("f1").textContent =
+                toPercent(metrics.at_risk_f1);
+
+
+            // =========================
+            // Model Information
+            // =========================
+
+            document.getElementById("modelName").textContent =
+                data.model;
+
+            document.getElementById("targetName").textContent =
+                data.target;
+
+            document.getElementById("threshold").textContent =
+                data.threshold.toFixed(2);
+
+            document.getElementById("posWeight").textContent =
+                metrics.pos_weight.toFixed(2);
+
+
+            // =========================
+            // Confusion Matrix
+            //
+            // [[TN, FP],
+            //  [FN, TP]]
+            // =========================
+
+            const matrix = metrics.confusion_matrix;
+
+            document.getElementById("trueNegative").textContent =
+                matrix[0][0];
+
+            document.getElementById("falsePositive").textContent =
+                matrix[0][1];
+
+            document.getElementById("falseNegative").textContent =
+                matrix[1][0];
+
+            document.getElementById("truePositive").textContent =
+                matrix[1][1];
+
+
+            // Show dashboard
+            statusBox.classList.add("hidden");
+            dashboard.classList.remove("hidden");
+
         }
-    };
+
+        catch (error) {
+
+            console.error(error);
+
+            statusBox.innerHTML = `
+                <strong>Unable to load model information.</strong>
+                <br>
+                Make sure the FastAPI backend is running on
+                http://127.0.0.1:8000.
+            `;
+
+            statusBox.classList.add("admin-error");
+        }
+
+    }
+
+
+    loadModelInfo();
 </script>
 
 </body>
