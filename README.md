@@ -146,11 +146,11 @@ The administration dashboard provides an overview of the deployed model, includi
 
 ### Prediction Interface
 
-![Prediction Interface](docs/images/Prediction Interface.png)
+![Prediction Interface](docs/images/prediction-interface.png)
 
 ### Model Administration Dashboard
 
-![Model Administration Dashboard](docs/images/Model Administration Dashboard.png)
+![Model Administration Dashboard](docs/images/model-administration-dashboard.png)
 
 ## Categorical Feature Codes
 
